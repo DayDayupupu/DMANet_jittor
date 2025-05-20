@@ -1,0 +1,11 @@
+numpy~=1.26.4
+numba~=0.60.0
+pyyaml~=6.0.2
+tensorboard
+opencv-python~=4.11.0.86
+tqdm~=4.67.1
+matplotlib~=3.9.4
+
+jittor~=1.3.7.0
+yaml~=0.2.5
+tensorboardx~=2.6.2.2
