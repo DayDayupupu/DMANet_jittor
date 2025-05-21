@@ -53,7 +53,7 @@ python data_check_npz.py
 Training
 
 ```Python
-python train_DMANet.py --settings_file=$YOUR_YAML_PATH
+python train_DMANet.py 
 ```
 
 Testing
