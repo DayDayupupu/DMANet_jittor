@@ -115,7 +115,10 @@ tools中存在可视化工具，可以检查测试后的结果——prediction_v
 
 ## 五、具体复现过程
 
-参考[复现过程笔记.md](https://github.com/DayDayupupu/DFMNet_jittor/blob/main/%E5%A4%8D%E7%8E%B0%E8%BF%87%E7%A8%8B%E7%AC%94%E8%AE%B0.md)
+参考
+[复现过程笔记.md](https://github.com/DayDayupupu/DFMNet_jittor/blob/main/%E5%A4%8D%E7%8E%B0%E8%BF%87%E7%A8%8B%E7%AC%94%E8%AE%B0.md)（部分公式无法正常显示）
+或者
+https://flowus.cn/biaoguo/share/d1319969-d9f1-4a1c-8bd3-caace8b8aad4?code=ZMTFPB
 
 ## 六、原项目地址以及相关仓库
 
