@@ -1,115 +1,135 @@
-# Dual Memory Aggregation Network for Event-based Object Detection with Learnable Representation
+# AAAI_Event_based_detection——jittor框架复现
 
-<div align=center><img src="https://github.com/wds320/AAAI_Event_based_detection/blob/main/demo2.gif" width="80%" height="80%" /></div>
+## 一、摘要
 
-## Abstract
-Event-based cameras are bio-inspired sensors that capture brightness change of every pixel in an asynchronous manner. Compared with frame-based sensors, event cameras have microsecond-level latency and high dynamic range, hence showing great potential for object detection under high-speed motion and poor illumination conditions. Due to sparsity and asynchronism nature with event streams, most of existing approaches resort to hand-crafted methods to convert event data into 2D grid representation. However, they are sub-optimal in aggregating information from event stream for object detection. In this work, we propose to learn an event representation optimized for event-based object detection. Specifically, event streams are divided into grids in the x-y-t coordinates for both positive and negative polarity, producing a set of pillars as 3D tensor representation. To fully exploit information with event streams to detect objects, a dual-memory aggregation network (DMANet) is proposed to leverage both long and short memory along event streams to aggregate effective information for object detection. Long memory is encoded in the hidden state of adaptive convLSTMs while short memory is modeled by computing spatial-temporal correlation between event pillars at neighboring time intervals. Extensive experiments on the recently released event-based automotive detection dataset demonstrate the effectiveness of the proposed method.
+本项目是依据Dual Memory Aggregation Network for Event-based Object Detection with Learnable Representation这篇论文的开源项目在jittor框架下复现的结果，以及对其存在的问题做出来简单的总结与修改。由于计算资源有限，未能完全下载数据集（268G）进行彻底的复现该论文，而是选取了部分数据集在pytorch和jittor框架下分别实验，实验结果与pytorch框架复现基本一致。
 
+## 二、如何运行
 
-## Installation
-- Step1. Install DMANet
-```
-git clone https://github.com/wds320/AAAI_Event_based_detection.git
-cd DMANet
-conda create -n dmanet python=3.6
+### Step1. 配置环境
+
+```Python
+git clone https://github.com/DayDayupupu/DFMNet_jittor.git
+cd DMANet_jittor
+conda create -n dmanet python=3.9.21
 conda activate dmanet
-conda install pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=10.1 -c pytorch
+conda install jittor==1.3.7.0 
 pip install -r requirements.txt
 ```
-- Step2. Install Apex (Mixed Precision Training)
 
-Method a: official build
-```
-cd apex
-pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
-```
-Method b: If you failed to install apex with method a, you can also build with the following commands.
-```
-cd apex
-python setup.py install
-```
+### step2. Data preparation
 
+具体数据处理过程可以参考原论文，此处是使用处理好的Prophesee 数据集
 
-## Data preparation
-- 1 Mpx Auto-Detection Sub Dataset 
- 
-Since the groundtruth of the [Prophesee dataset](https://www.prophesee.ai/2020/11/24/automotive-megapixel-event-based-dataset/) is obtained automatically by applying an RGB-based detector in the stereo recording setting, there are some geometric errros such as misalignment and semantic errors caused by wrong detection of the detector with the ground truth. We also found that there are some *mosaic* events in this dataset which might be caused by flickering as explained by authors of that dataset. Therefore, we remove theses events and incorrect labels manually by visualizing the whole dataset. The challenging scenario in this work is defined as the case that movement-to-still happens, where only few events are produced and little information could be used by the model. Precise statistics of the 1 Mpx Auto-
-Detection Sub Dataset is shown in Tab. 2.
-<div align=center><img src="https://github.com/wds320/AAAI_Event_based_detection/blob/main/subdataset.png" width="50%" /></div>
-  
-- Download 1 Mpx Auto-Detection Sub Dataset. (Total 268GB)
+- Download: Mpx Auto-Detection Sub Dataset. (Total 268GB)
 
-Links: [https://pan.baidu.com/s/1YawxZFJhQWVgLye9zZtysA](https://pan.baidu.com/s/1YawxZFJhQWVgLye9zZtysA)
+Links:[ https://pan.baidu.com/s/1YawxZFJhQWVgLye9zZtysA]( https://pan.baidu.com/s/1YawxZFJhQWVgLye9zZtysA)
 
-Password: c6j9 
+Password: c6j9
 
 - Dataset structure
-```
+
+```Python
 prophesee_dlut   
 ├── test
-│   ├── testfilelist00
-│   ├── testfilelist01
-│   └── testfilelist02
+│   ├── testfilelist00
 ├── train
-│   ├── trainfilelist00
-│   ├── trainfilelist01
-│   ├── trainfilelist02
-│   ├── trainfilelist03
-│   ├── trainfilelist04
-│   ├── trainfilelist05
-│   ├── trainfilelist06
-│   ├── trainfilelist07
-│   ├── trainfilelist08
-│   ├── trainfilelist09
-│   ├── trainfilelist10
-│   ├── trainfilelist11
-│   ├── trainfilelist12
-│   ├── trainfilelist13
-│   └── trainfilelist14
+│   ├── trainfilelist00
+│   ├── trainfilelist01
 └── val
     ├── valfilelist00
-    └── valfilelist01
 ```
 
 - Dataset Visualization
-```
+
+```Python
 python data_check_npz.py
 ```
 
+### step3. Training & Testing
 
-## Training & Testing
-Change settings.yaml, including *dataset_path* and *save_dir*.  
-- 1. Training
-```
+首先添加log（记录训练曲线）、save path（保存测试结果）两个文件夹
+
+Training
+
+```Python
 python train_DMANet.py --settings_file=$YOUR_YAML_PATH
 ```
-- 2. Testing
-```
+
+Testing
+
+```Python
 python test.py --weight=$YOUR_MODEL_PATH
 ```
-We provided a trained model [here](https://pan.baidu.com/s/1kqfk1gxxqtNHeg75z-EWEg). (Password：6r06)
+
+## 三、复现结果
+
+### 1. jittor
+
+通过tensorboard记录训练曲线
+
+#### learning rate
+
+![image](https://github.com/user-attachments/assets/dce49519-6ce8-4452-8269-a1c82d0dfe3b)
 
 
-## Visualization results on 1 Mpx Auto-Detection Sub Dataset
-![图片](https://github.com/wds320/AAAI_Event_based_detection/blob/main/case.png)
+#### training loss
+
+![image](https://github.com/user-attachments/assets/59494ceb-9504-4531-921c-ca9083382567)
 
 
-## Citation
-Please cite the following paper if you use this repo in your research:
+#### test result
 
-```bibtex
-@inproceedings{dmanet,
-  title={Dual Memory Aggregation Network for Event-Based Object Detection with Learnable Representation},
-  author={Wang, Dongsheng and Jia, Xu and Zhang, Yang and Zhang, Xinyu and Wang, Yaoyuan and Zhang, Ziyang and Wang, Dong and Lu, Huchuan},  
-  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-  year={2023}
-}
-```
+数据集的较小，与训练集同源缺乏多样性，所以得分较高，主要是为了测试复现过程是否正确，方便与pytorch的框架进行对齐
+
+|Class|Events|Labels|Precision|Recall|mAP@0.5|mAP@0.5:0.95|
+|-|-|-|-|-|-|-|
+|all|30|150|0.743|0.578|0.711|0.385|
+|car|30|150|0.743|0.578|0.711|0.385|
+
+### 2. pytorch
+
+#### learning rate
+
+![image](https://github.com/user-attachments/assets/4645b3e9-60c1-41aa-9e63-e1519bc8a4f7)
 
 
-## Related Repos
+#### training loss
+
+![image](https://github.com/user-attachments/assets/e5722c09-58ab-4e56-85c8-d5443d678f3d)
+
+
+#### test result
+
+|Class|Events|Labels|Precision|Recall|mAP@0.5|mAP@0.5:0.95|
+|-|-|-|-|-|-|-|
+|all|60|309|1.000|0.773|0.778|0.572|
+|car|60|309|1.000|0.773|0.778|0.572|
+
+## 四、可视化
+
+tools中存在可视化工具，可以检查测试后的结果——prediction_visualize_npz.py（需修改路径）
+
+![image](https://github.com/user-attachments/assets/cffb1003-45ac-4c2c-8b14-551087c9543e)
+
+
+## 五、具体复现过程
+
+参考[复现过程笔记.md](https://github.com/DayDayupupu/DFMNet_jittor/blob/main/%E5%A4%8D%E7%8E%B0%E8%BF%87%E7%A8%8B%E7%AC%94%E8%AE%B0.md)
+
+## 六、原项目地址以及相关仓库
+
+原项目地址
+
+- AAAI_Event_based_detection：[https://github.com/wds320/AAAI_Event_based_detection](https://github.com/wds320/AAAI_Event_based_detection)
+
+相关仓库
+
 - RetinaNet implementation: [https://github.com/yhenon/pytorch-retinanet](https://github.com/yhenon/pytorch-retinanet)
+
 - PointPillars implementation: [https://github.com/SmallMunich/nutonomy_pointpillars](https://github.com/SmallMunich/nutonomy_pointpillars)
+
 - Prophesee's Automotive Dataset Toolbox: [https://github.com/prophesee-ai/prophesee-automotive-dataset-toolbox](https://github.com/prophesee-ai/prophesee-automotive-dataset-toolbox)
+
 - Event-based Asynchronous Sparse Convolutional Networks: [https://github.com/uzh-rpg/rpg_asynet](https://github.com/uzh-rpg/rpg_asynet)
 
