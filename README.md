@@ -59,7 +59,7 @@ python train_DMANet.py
 Testing
 
 ```Python
-python test.py --weight=$YOUR_MODEL_PATH
+python test_dmanet.py --weight=$YOUR_MODEL_PATH
 ```
 
 ## 三、复现结果
