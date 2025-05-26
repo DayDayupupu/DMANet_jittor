@@ -25,8 +25,10 @@ class DMANet_Detector(nn.Module):
             # print(classification.shape)
             scores = jt.squeeze(classification[:, :, i])
             scores_over_thresh = scores > self.conf_threshold
-            # print(scores)
-            if not scores_over_thresh.any():
+            # print(scores_over_thresh)
+
+            if jt.sum(scores_over_thresh).item() == 0:
+                # print("continue")
                 continue
 
             scores = scores[scores_over_thresh]
