@@ -8,7 +8,7 @@ dataset:
     height: 720
     width: 1280
     resize: 512
-    voxel_size: [ 1, 1, 4 ]
+    voxel_size: [1, 1, 1]
     max_num_points: 5
     max_voxels: 100000
     num_bins: 5
